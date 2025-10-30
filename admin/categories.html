@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Dasboard</title>
+
+    <!-- link bs  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- icon bs  -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- link css  -->
+    <link rel="stylesheet" href="css/css.css" />
+
+    <!-- sweet alert 2  -->
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <!-- container dasboard start  -->
+    <div class="containerDasboard">
+      <!-- side bar start -->
+      <aside class="sidbar">
+        <div class="containerLogo">
+          <a href="index.html" class="fs-1 nav-link">Logo</a>
+        </div>
+
+        <div class="containerSidebarBtn">
+          <div class="btnSidebar">
+            <i class="bi bi-layout-sidebar-inset"></i>
+          </div>
+        </div>
+
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link fw-bold"
+              ><i class="bi bi-house-door-fill"></i>
+              <span class="txt-link">Dasboard</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="order.html" class="nav-link fw-bold"
+              ><i class="bi bi-bag-fill"></i>
+              <span class="txt-link">Order</span></a
+            >
+          </li>
+           <li class="nav-item active">
+            <a href="categories.html" class="nav-link fw-bold"
+              ><i class="bi bi-tag-fill"></i></i>
+              <span class="txt-link">Categories</span></a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a href="product.html" class="nav-link fw-bold"
+              ><i class="bi bi-box-fill"></i>
+              <span class="txt-link">Product</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="customer.html" class="nav-link fw-bold"
+              ><i class="bi bi-people-fill"></i>
+              <span class="txt-link">Customer</span></a
+            >
+          </li>
+        </ul>
+      </aside>
+      <!-- side bar end -->
+
+      <!-- overlay sidbar start  -->
+      <div class="overlaySidebar"></div>
+      <!-- overlay sidbar end  -->
+
+      <!-- container right start -->
+      <div class="main">
+
+
+       <div class="containerLink">
+        <!-- link content start  -->
+        <div class="linkContent">
+          <h4 class="fw-bold fs-4">Categories</h4>
+        </div>
+        <!-- link content end  -->
+
+        <div class="containerProfile">
+          <div class="profile">
+            <div class="imgProfile">
+              <img src="img/Default_pfp.svg.png" alt="default">
+            </div>
+
+            <div class="containerMenu">
+              <div class="menu">
+              <i class="bi bi-three-dots-vertical"></i>
+            </div>
+
+            <div class="contentMenu">
+              <button class="menuItem btn btn-primary"><i class="bi bi-person-fill"></i> Profile</button>
+              <div class="containerdarkMOde">
+                <div class="form-check form-switch">
+  <input class="form-check-input darkBtn" data-darkmode="dark" type="checkbox" role="switch" id="switchCheckDefault">
+  <label class="form-check-label fw-bold darkmodeContent" for="switchCheckDefault">Dark</label>
+</div>
+              </div>
+              <button class="menuItem btn btn-danger"><i class="bi bi-box-arrow-right"></i> Logout</button>
+            </div>
+            </div>
+
+            <div class="btnSidebarSmall">
+          <div class="smallBtn">
+            <i class="bi bi-layout-sidebar-inset"></i>
+          </div>
+        </div>
+
+          </div>
+
+        </div>
+
+        
+      </div>
+
+      <div class="contianerAddNewCategories">
+        <div>Categories List</div>
+        <button class="btnAddNewCate">+ Add Categories</button>
+      </div>
+
+      <div class="containerCategories">
+        <div class="containerSearchCategories">
+          <input type="search" id="searchCate" class="form-control" placeholder="Search...">
+        </div>
+      </div>
+
+      <div class="containerTableCatgories table-responsive">
+        <table class="table table-hover" >
+          <thead class="text-nowrap">
+            <tr>
+              <th>Categories Name</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="tbodyCategories" class="text-nowrap">
+            <tr class="containerNoItemCatgories">
+              <td colspan="5">No categories yet!</td>
+            </tr>
+
+            <tr class="searchNotFound">
+              <td colspan="5" class="text-center">Not categories found!</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+
+      </div>
+
+
+      <!-- add categories start -->
+       <div class="containerAddCategores">
+        <form class="formAddCategories">
+          <h6 class="fs-2 fw-bold">Add new categories</h6>
+              <div class="my-4"><input type="text" id="nameCategories" class="form-control" placeholder="Categories Name" required></div>
+              <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox"  role="switch" data-status="Publish" id="categoriesInput" checked>
+  <label class="form-check-label" for="categoriesInput">Publish</label>
+</div>
+<div class="d-flex justify-content-end gap-2">
+  <button type="submit" class="btn btn-primary">Add</button>
+</div>
+</form>
+<button class="btnConcelAddCate"><i class="bi bi-x-lg"></i></button>
+       </div>
+      <!-- add categories end -->
+
+      <!-- overlay add cate start  -->
+       <div class="overlayAddCate"></div>
+      <!-- overlay add cate end  -->
+
+      <!-- edit categories start -->
+       <div class="containerEditCategores">
+        <form class="formEditCategories">
+          <h6 class="fs-2 fw-bold">Edit categories</h6>
+              <div class="my-4"><input type="text" id="nameCategoriesEdit" class="form-control" placeholder="Categories Name" required></div>
+              <div class="form-check form-switch">
+  <input class="form-check-input" type="checkbox"  role="switch" data-status="Publish" id="categoriesInputEdit" checked>
+  <label class="form-check-label" for="categoriesInputEdit">Publish</label>
+</div>
+<div class="d-flex justify-content-end gap-2">
+  <button type="submit" class="btn btn-primary">Update</button>
+</div>
+</form>
+<button class="btnConcelEditCate"><i class="bi bi-x-lg"></i></button>
+       </div>
+      <!-- edit categories end -->
+
+      
+
+      
+
+
+    <!-- menu js start  -->
+    <script src="js/menu.js"></script>
+
+    <!-- darmode js start  -->
+     <script src="js/darkmode.js"></script>
+
+     <!-- add new categories js  -->
+      <script src="js/addnewcategories.js"></script>
+
+  </body>
+</html>
