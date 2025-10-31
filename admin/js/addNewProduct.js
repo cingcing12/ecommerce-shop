@@ -1,4 +1,3 @@
-
 const btnAddProduct = document.querySelector('.btnAddProduct');
 const containerAddProduct = document.querySelector('.containerAddProduct');
 const formAddProduct = document.getElementById('formAddProduct');
@@ -7,10 +6,23 @@ const overlayAddCate = document.querySelector('.overlayAddCate');
 const productSelecct = document.getElementById('productSelecct');
 const selectCate = document.getElementById('selectCate');
 const statusInput = document.getElementById('status');
+const statusInputEdit = document.getElementById('statusEdit');
 const tbody = document.getElementById('tbodyProduct');
 const searchStatus = document.getElementById('searchStatus');
 const containerNotFoundProduct = document.querySelector('.containerNotFoundProduct');
 const searchPro = document.getElementById('searchPro');
+const containerEditProduct = document.querySelector('.containerEditProduct');
+const editConcelProduct = document.querySelector('.editConcelProduct');
+const formEditProduct = document.getElementById('formEditProduct');
+const productSelectEdit = document.getElementById('productSelectEdit');
+let idEdit = null;
+
+editConcelProduct.addEventListener('click', () => {
+    containerEditProduct.classList.remove('active');
+    overlayAddCate.classList.remove('active');
+    updateResetForm();
+})
+
 
 
 
@@ -28,6 +40,7 @@ addProductConcel.addEventListener('click', () => {
 overlayAddCate.addEventListener('click', () => {
     overlayAddCate.classList.remove('active');
     containerAddProduct.classList.remove('active');
+    containerEditProduct.classList.remove('active');
     updateResetForm();
 })
 
@@ -100,6 +113,7 @@ const updateResetForm = () => {
     if (containerOptionClothes) {
         containerOptionClothes.remove();
     }
+    formEditProduct.reset();
 }
 
 const updateCategoriesAdd = async (productSelecct) => {
@@ -121,22 +135,30 @@ const updateCategoriesAdd = async (productSelecct) => {
         });
     }
 }
-
 updateCategoriesAdd(productSelecct);
 updateCategoriesAdd(selectCate);
+updateCategoriesAdd(productSelectEdit);
 
 
 productSelecct.addEventListener('change', function () {
-    if (this.value == "Clothes") {
+    updateSelectCate(this, formAddProduct);
+})
+
+productSelectEdit.addEventListener('change', function(){
+    updateSelectCate(this, formEditProduct);
+})
+
+const updateSelectCate = (input, form) => {
+    if (input.value == "Clothes") {
         const containerOptionClothes = document.querySelector('.containerOptionClothes');
         if (containerOptionClothes) {
             containerOptionClothes.remove();
         }
-        const childclothes = formAddProduct.childNodes[3];
+        const childclothes = form.childNodes[3];
         const div = document.createElement('div');
         div.className = "col-12 mt-3 containerOptionClothes";
         div.innerHTML = `
-        <select class="form-select" id="size" aria-label="Default select example" required>
+        <select class="form-select" id="${form.id == "formAddProduct" ? "size" : 'sizeEdit'}"  aria-label="Default select example" required>
   <option selected>Size</option>
   <option >S</option>
   <option >M</option>
@@ -145,16 +167,16 @@ productSelecct.addEventListener('change', function () {
 </select>
         `
         childclothes.insertBefore(div, childclothes.childNodes[4]);
-    } else if (this.value == "Shoes") {
+    } else if (input.value == "Shoes") {
         const containerOptionClothes = document.querySelector('.containerOptionClothes');
         if (containerOptionClothes) {
             containerOptionClothes.remove();
         }
-        const childclothes = formAddProduct.childNodes[3];
+        const childclothes = form.childNodes[3];
         const div = document.createElement('div');
         div.className = "col-12 mt-3 containerOptionClothes";
         div.innerHTML = `
-        <select class="form-select" id="size" aria-label="Default select example" required>
+        <select class="form-select" id="${form.id == "formAddProduct" ? "size" : 'sizeEdit'}" aria-label="Default select example" required>
   <option selected>Size</option>
   <option >38</option>
   <option >39</option>
@@ -170,8 +192,7 @@ productSelecct.addEventListener('change', function () {
             containerOptionClothes.remove();
         }
     }
-})
-
+}
 
 const updateProduct = async () => {
     try {
@@ -200,8 +221,10 @@ const updateProduct = async () => {
 
                 const size = document.createElement('td');
                 size.classList.add('sizeCreate');
-                size.textContent = size.textContent == null ? "No Size!" : item.size;
+                size.textContent = item.size == null ? "No Size!" : item.size;
                 tr.appendChild(size);
+
+                size.textContent == "No Size!" ? size.classList.add('nosize') : "";
 
 
                 const stock = document.createElement('td');
@@ -242,13 +265,7 @@ const updateProduct = async () => {
                 tbody.appendChild(tr);
 
 
-
-
-
-
-
-
-
+                // delete product 
                 tr.querySelector('#delCate').addEventListener('click', () => {
                     const id = tr.dataset.id;
 
@@ -292,6 +309,30 @@ const updateProduct = async () => {
                     });
                 })
 
+                // edit product 
+                tr.querySelector('#editCate').addEventListener('click', () => {
+                    containerEditProduct.classList.add('active');
+                    overlayAddCate.classList.add('active');
+                    document.getElementById('nameProductEdit').value = tr.querySelector('.nameProductCreate').textContent;
+                    const selectEdit = document.getElementById('productSelectEdit');
+                    selectEdit.value = categories.textContent;
+                    document.getElementById('imgURLEdit').value = tr.querySelector('.imgproductcreate').src;
+                    document.getElementById('brandEdit').value = brand.textContent;
+                    document.getElementById('stockEdit').value = stock.textContent;
+                    document.getElementById('priceEdit').value = parseInt(price.textContent.replace('$', ''));
+                    document.getElementById('desEdit').value = item.des;
+                    let statusEdit = document.getElementById('statusEdit');
+                    statusEdit.dataset.status = status.textContent;
+                    statusEdit.checked = statusEdit.dataset.status === "Publish" ? true : false;
+                    updateSelectCate(selectEdit, formEditProduct);
+
+                    if(item.size){
+                        document.getElementById('sizeEdit').value = item.size;
+                    }
+
+                    idEdit = tr.dataset.id;
+                })
+
             })
         } else {
             return;
@@ -307,10 +348,19 @@ const updateProduct = async () => {
 
 updateProduct();
 
-// update status 
+// update status start
 statusInput.addEventListener('change', function () {
-    this.dataset.status = this.checked ? "Publish" : "Private";
+    updateStatus(this);
 })
+
+statusInputEdit.addEventListener('change', function(){
+    updateStatus(this);
+})
+
+const updateStatus = (input) => {
+    input.dataset.status = input.checked ? "Publish" : "Private";
+}
+// update status end
 
 
 window.addEventListener('load', () => {
@@ -395,3 +445,68 @@ searchPro.addEventListener('keyup', function(){
     }
 })
 
+// form edit 
+formEditProduct.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const nameProduct = document.getElementById('nameProductEdit').value;
+    const productSelect = document.getElementById('productSelectEdit').value;
+    let size = document.getElementById('sizeEdit');
+    if (size) {
+        if (size.value == "Size") {
+            return Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please select size!",
+            });
+        }
+        size = size.value;
+    }
+    const imgURL = document.getElementById('imgURLEdit').value;
+    const brand = document.getElementById('brandEdit').value;
+    const stock = document.getElementById('stockEdit').value;
+    const price = document.getElementById('priceEdit').value;
+    const time = new Date();
+    const created = time.toDateString();
+    const des = document.getElementById('desEdit').value;
+    const status = statusInputEdit.dataset.status;
+
+    if (productSelectEdit.value == "Categories") {
+        return Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please select categories!",
+        });
+    }
+
+    try {
+        const res = await fetch(`http://localhost:3000/updateProduct/${idEdit}`, {
+            method: "put",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({ nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status })
+        })
+
+        const mess = await res.json();
+        if (res.ok) {
+            overlayAddCate.click();
+            Swal.fire({
+                icon: "success",
+                title: "Successfully",
+                text: mess.message,
+            })
+                .then(() => {
+                    const tr = tbody.querySelectorAll('.containerProductCreate');
+                    tr.forEach(item => item.remove());
+                    updateProduct();
+
+                })
+        }
+    } catch (err) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.message,
+        });
+    }
+
+})

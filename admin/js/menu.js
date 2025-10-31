@@ -9,13 +9,11 @@ const main = document.querySelector('.main');
 const logo = document.querySelector('.containerLogo');
 
 btnSidebar.addEventListener('click', () => {
-
     logo.style = "transition: .2s ease";
     sidebar.style = "transition: .5s ease";
     main.style = "transition: .5s ease";
     containerDasboard.classList.toggle('activeBigDevive');
     localStorage.setItem('activeSideBar', containerDasboard.classList[1]);
-
 
 })
 

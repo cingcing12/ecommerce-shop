@@ -729,6 +729,21 @@ tbody{
     -webkit-box-orient: vertical;
 }
 
+.createdEle{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.nosize{
+    font-size: 14px;
+    color: red !important;
+    font-weight: bold;
+}
+
+.brandCreate{
+    font-weight: bold;
+}
+
 @media(max-width: 991px){
     .sidbar{
         position: absolute;
@@ -787,6 +802,10 @@ tbody{
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .containerSidebarBtn{
+        display: none;
+    }
+
 }
 
 @media(max-width: 768px){
@@ -800,5 +819,13 @@ tbody{
     .containerActiveStatus{
         max-width: none;
         width: 100%;
+    }
+}
+
+@media(max-width: 832px){
+    .containerSeachProduct{
+        flex-direction: column;
+        gap: 20px;
+        align-items: start;
     }
 }

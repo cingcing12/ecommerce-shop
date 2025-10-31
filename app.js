@@ -180,6 +180,21 @@ mongoDB.connect(url)
             }
         })
 
+        app.put('/updateProduct/:idEdit', async (req, res) => {
+            try{
+                const {idEdit} = req.params;
+                const { nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status } = req.body;
+                const dataUPdate = await product.findByIdAndUpdate(idEdit, 
+                    { nameProduct: nameProduct, imgURL: imgURL, categories: productSelect, size: size, brand: brand, stock: stock, price: price, created: created, des: des, status: status },
+                    {new: true}
+                );
+
+                res.status(200).json({ data: dataUPdate, message: "Product updated successfully!" });
+            }catch(err){
+                res.status(500).json({ err: err.message });
+            }
+        })
+
 
         app.listen(port, () => {
             console.log(`MongoDb connected! http://localhost:${port}`);
