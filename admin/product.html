@@ -139,15 +139,15 @@
 
       <div class="containerSeachProduct">
         <div class="containerProductSearch">
-            <input type="search" class="form-control" placeholder="Search...">
+            <input type="search" class="form-control" id="searchPro" placeholder="Search...">
         </div>
 
         <div class="containerSearchStatus">
             <div class="containerStatusSearch">
                 <select class="form-select" id="searchStatus" aria-label="Default select example">
   <option selected>All Status</option>
-  <option value="1">Publish</option>
-  <option value="2">Private</option>
+  <option>Publish</option>
+  <option>Private</option>
 </select>
             </div>
 
@@ -169,6 +169,7 @@
                     <th>Size</th>
                     <th>Stock</th>
                     <th>Price</th>
+                    <th>Brand</th>
                     <th>Status</th>
                     <th>Created</th>
                     <th>Action</th>
@@ -176,7 +177,11 @@
             </thead>
             <tbody id="tbodyProduct">
                 <tr class="containerNoItemProduct">
-                    <td colspan="8">No product yet!</td>
+                    <td colspan="9">No product yet!</td>
+                </tr>
+
+                <tr class="containerNotFoundProduct">
+                  <td colspan="9">Not found!</td>
                 </tr>
             </tbody>
         </table>

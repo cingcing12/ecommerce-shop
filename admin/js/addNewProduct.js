@@ -9,6 +9,10 @@ const selectCate = document.getElementById('selectCate');
 const statusInput = document.getElementById('status');
 const tbody = document.getElementById('tbodyProduct');
 const searchStatus = document.getElementById('searchStatus');
+const containerNotFoundProduct = document.querySelector('.containerNotFoundProduct');
+const searchPro = document.getElementById('searchPro');
+
+
 
 btnAddProduct.addEventListener('click', () => {
     containerAddProduct.classList.add('active');
@@ -210,6 +214,11 @@ const updateProduct = async () => {
                 price.textContent = `$${item.price.toFixed(2)}`;
                 tr.appendChild(price);
 
+                const brand = document.createElement('td');
+                brand.classList.add('brandCreate');
+                brand.textContent = item.brand;
+                tr.appendChild(brand);
+
                 const status = document.createElement('td');
                 status.classList.add('statusCreate');
                 status.textContent = item.status;
@@ -232,34 +241,8 @@ const updateProduct = async () => {
 
                 tbody.appendChild(tr);
 
-                selectCate.addEventListener('change', function () {
-                    updateTest(tr, categories, this.value);
-                })
-
-                searchStatus.addEventListener('change', function(){
-                    updateTest(tr, status, this.value);
-                })
-
-                const updateTest = (tr, categories, thisValue) => {
-    if (thisValue == "All Categories" || thisValue == "All Status") {
-        tr.style.display = '';
-    } else if (categories.textContent.toLowerCase().includes(thisValue.toLowerCase())) {
-        tr.style.display = '';
-        console.log(categories.textContent.toLowerCase().includes(thisValue.toLowerCase()))
-    }
-    else {
-        console.log(categories.textContent.toLowerCase().includes(thisValue.toLowerCase()))
-        tr.style.display = "none";
-    }
-}
 
 
-const tset = () => {
-    const tr = tbody.querySelectorAll('.containerProductCreate');
-    console.log(tr);
-}
-
-tset()
 
 
 
@@ -327,5 +310,88 @@ updateProduct();
 // update status 
 statusInput.addEventListener('change', function () {
     this.dataset.status = this.checked ? "Publish" : "Private";
+})
+
+
+window.addEventListener('load', () => {
+    selectCate.addEventListener('change', function () {
+        updateSaerch();
+    })
+
+    searchStatus.addEventListener('change', function () {
+        updateSaerch();
+    })
+
+    const updateSaerch = () => {
+        const containerProductCreate = document.querySelectorAll('.containerProductCreate');
+        let found = false;
+        containerProductCreate.forEach(item => {
+            const categories = item.querySelector('.cateCreate');
+            const status = item.querySelector('.statusCreate');
+
+                const cateTxt = categories.textContent.toLowerCase();
+                const statusTxt = status.textContent.toLowerCase();
+                const cateSelect = selectCate.value.toLowerCase();
+                const statusSelect = searchStatus.value.toLowerCase();
+
+                if(searchPro.value.length == 0){
+                    if (conditionSearch(cateTxt, statusTxt, cateSelect, statusSelect)) {
+                    item.style.display = '';
+                    found = true;
+                }
+                else {
+                    item.style.display = "none";
+                }
+                }else{
+                    if ((conditionSearch(cateTxt, statusTxt, cateSelect, statusSelect)) && 
+                    item.querySelector('.nameProductCreate').textContent.toLowerCase().includes(searchPro.value.toLowerCase())) {
+                    item.style.display = '';
+                    found = true;
+                }
+                else {
+                    item.style.display = "none";
+                }
+                }
+        })
+
+        containerNotFoundProduct.classList.toggle('active', !found);
+
+    }
+
+    // search  product
+searchPro.addEventListener('keyup', function(){
+    updateSearchPro(this.value);
+})
+    const updateSearchPro = (thisValue) => {
+        const containerProductCreate = document.querySelectorAll('.containerProductCreate');
+        let found = false;
+        containerProductCreate.forEach(item => {
+            const categories = item.querySelector('.cateCreate');
+            const status = item.querySelector('.statusCreate');
+            const cateTxt = categories.textContent.toLowerCase();
+                const statusTxt = status.textContent.toLowerCase();
+                const cateSelect = selectCate.value.toLowerCase();
+                const statusSelect = searchStatus.value.toLowerCase();
+
+            if((conditionSearch(cateTxt, statusTxt, cateSelect, statusSelect)) && 
+            item.querySelector('.nameProductCreate').textContent.toLowerCase().includes(thisValue.toLowerCase())){
+                        item.style.display = '';
+                        found = true;
+                    }else{
+                        item.style.display = 'none'
+                    }
+                   
+        })
+
+        containerNotFoundProduct.classList.toggle('active', !found);
+
+    }
+
+    const conditionSearch = (cateTxt, statusTxt, cateSelect, statusSelect) => {
+        return (selectCate.value == "All Categories" && searchStatus.value == "All Status") ||
+                    (searchStatus.value == "All Status" && cateTxt.includes(cateSelect)) ||
+                    (selectCate.value == "All Categories" && statusTxt.includes(statusSelect)) ||
+                    (cateTxt.includes(cateSelect) && statusTxt.includes(statusSelect))
+    }
 })
 

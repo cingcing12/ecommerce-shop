@@ -85,7 +85,7 @@ mongoDB.connect(url)
             try {
                 const { idItem } = req.params;
                 const { nameEdit, statusEdit, editCreate } = req.body;
-                const dataEdit = await categories.findByIdAndUpdate(idItem, { name: nameEdit, status: statusEdit, created: editCreate }, { new: true });
+                const dataEdit = await categories.findByIdAndUpdate(idItem, { categoriesName: nameEdit, status: statusEdit, created: editCreate }, { new: true });
 
                 if (!dataEdit) {
                     return res.status(404).json("Not found!");
@@ -112,51 +112,71 @@ mongoDB.connect(url)
 
         app.post('/addProduct', async (req, res) => {
             try {
-                const { nameProduct, imgURL, productSelect, size, brand, stock, price, created, des , status} = req.body;
-                const newData = new product({ nameProduct: nameProduct, imgURL: imgURL, categories: productSelect, size: size, brand: brand, stock: stock, price: price, created: created, des: des , status: status});
+                const { nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status } = req.body;
+                const newData = new product({ nameProduct: nameProduct, imgURL: imgURL, categories: productSelect, size: size, brand: brand, stock: stock, price: price, created: created, des: des, status: status });
                 await newData.save();
-                res.status(200).json({data: newData, message: "Added product successfully!"});
+                res.status(200).json({ data: newData, message: "Added product successfully!" });
             } catch (err) {
                 res.status(500).json({ err: err.message });
             }
         })
 
         app.get('/getproduct', async (req, res) => {
-            try{
+            try {
                 const data = await product.find();
-                if(!data){
+                if (!data) {
                     return res.status(404).json("Not found!");
                 }
                 res.status(200).json(data);
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.delete('/deleteProduct/:id', async (req, res) => {
-            try{
-                const {id} = req.params;
+            try {
+                const { id } = req.params;
                 const del = await product.findByIdAndDelete(id);
-                if(!del){
+                if (!del) {
                     return res.status(404).json("Not Found!");
                 }
 
-                res.status(200).json({data: del, message: "Deleted successfully!"});
-            }catch(err){
-                res.status(500).json({err: err.message});
+                res.status(200).json({ data: del, message: "Deleted successfully!" });
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.get('/productPublish', async (req, res) => {
-            try{
+            try {
                 const data = await product.find({ status: "Publish" });
                 if (!data) {
                     return res.status(404).json("Not found!");
                 }
 
                 res.status(200).json({ data: data, target: 1000 });
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
+            }
+        })
+
+        app.get('/getProductCategories', async (req, res) => {
+            try {
+                const cateData = await categories.find({ status: "Publish" });
+                const productData = await product.find({ status: "Publish" });
+
+                const newData = cateData.map(item => {
+                    const filter = productData.filter(dataFind => dataFind.categories.toLowerCase().includes(item.categoriesName.toLowerCase()));
+
+                    return{
+                        categoriesName: item.categoriesName,
+                        products: filter
+                    }
+                })
+                res.json(newData)
+
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 

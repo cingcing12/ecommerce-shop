@@ -23,7 +23,7 @@ body{
     padding: 20px;
     width: 20%;
     overflow: hidden;
-    transition: .5s ease;
+    /* transition: .5s ease; */
     height: 100vh;
     z-index: 100;
 }
@@ -34,7 +34,7 @@ body[data-bs-theme="dark"] .sidbar{
 
 .containerLogo{
     margin-block-end: 20px;
-    transition: .2s ease;
+    /* transition: .2s ease; */
 }
 
 .containerLogo a{
@@ -78,32 +78,32 @@ body[data-bs-theme="dark"] .nav-item.active{
     background-color: #D4EBE7;
 }
 
-.containerDasboard.active .sidbar{
+.containerDasboard.activeBigDevive .sidbar{
     width: 5%;
 }
 
-.containerDasboard.active .containerLogo{
+.containerDasboard.activeBigDevive .containerLogo{
     transform: translateY(-150%);
     position: absolute;
     opacity: 0;
 }
 
-.containerDasboard.active .txt-link{
+.containerDasboard.activeBigDevive .txt-link{
     display: none;
 }
 
-.containerDasboard.active .navbar-nav{
+.containerDasboard.activeBigDevive .navbar-nav{
     align-items: center;
     justify-content: center;
 }
 
 .main{
     width: 80%;
-    transition: .5s ease;
+    /* transition: .5s ease; */
     padding: 20px;
 }
 
-.containerDasboard.active .main{
+.containerDasboard.activeBigDevive .main{
     width: 95%;
 }
 
@@ -128,7 +128,7 @@ body[data-bs-theme="dark"] .btnSidebar{
     background-color: #011613;
 }
 
-.containerDasboard.active .btnSidebar{
+.containerDasboard.activeBigDevive .btnSidebar{
     justify-content: center;
 }
 
@@ -136,7 +136,7 @@ body[data-bs-theme="dark"] .menu{
     background-color: #011613;
 }
 
-.containerDasboard.active .containerSidebarBtn{
+.containerDasboard.activeBigDevive .containerSidebarBtn{
     justify-content: center;
 }
 
@@ -703,6 +703,32 @@ tbody{
     font-weight: bold;
 }
 
+.containerNotFoundProduct{
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.containerNotFoundProduct td{
+    padding: 40px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.containerNotFoundProduct.active{
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+}
+
+.nameProductCreate{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
 @media(max-width: 991px){
     .sidbar{
         position: absolute;
@@ -750,6 +776,10 @@ tbody{
     }
 
     .containerDasboard.active .main{
+        width: 100%;
+    }
+
+    .containerDasboard.activeBigDevive .main{
         width: 100%;
     }
 
