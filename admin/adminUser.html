@@ -71,19 +71,20 @@
               <span class="txt-link">Product</span></a
             >
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a href="customer.html" class="nav-link fw-bold"
               ><i class="bi bi-people-fill"></i>
               <span class="txt-link">Customer</span></a
             >
           </li>
 
-          <li class="nav-item">
+          <li class="nav-item active">
             <a href="adminUser.html" class="nav-link fw-bold"
               ><i class="bi bi-person-fill"></i>
               <span class="txt-link">Admin User</span></a
             >
           </li>
+
         </ul>
       </aside>
       <!-- side bar end -->
@@ -99,7 +100,7 @@
        <div class="containerLink">
         <!-- link content start  -->
         <div class="linkContent">
-          <h4 class="fw-bold fs-4">Customer</h4>
+          <h4 class="fw-bold fs-4">Admin User</h4>
         </div>
         <!-- link content end  -->
 
@@ -140,12 +141,12 @@
       </div>
 
       <div class="contianerAddNewCustomer">
-        <div>Customer List</div>
-        <button class="btnAddNewCs">+ Add Customer</button>
+        <div>Admin User List</div>
+        <button class="btnAddNewCs addAdminUser">+ Add</button>
       </div>
 
-      <div class="containerSearchCs">
-        <input type="search" class="form-control" placeholder="Search...">
+      <div class="containerSearchCs containerSearchAdminUser">
+        <input type="search" class="form-control" id="searchAdminUser" placeholder="Search...">
       </div>
 
       <div class="containerTableCs table-responsive">
@@ -155,15 +156,14 @@
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Location</th>
-              <th>Gender</th>
+              <th>Role</th>
               <th>Action</th>
             </tr>
           </thead>
 
-          <tbody>
-            <tr class="containerNoItemCs">
-              <td colspan="6">No customer yet!</td>
+          <tbody id="tbodyAdminUser">
+            <tr class="containerNoItemCs adminUserNoData">
+              <td colspan="6">No admin user yet!</td>
             </tr>
           </tbody>
         </table>
@@ -176,6 +176,9 @@
 
     <!-- darmode js start  -->
      <script src="js/darkmode.js"></script>
+
+     <!-- adminuser js  -->
+     <script src="js/adminuser.js"></script>
 
      <!-- checkAuthAdmin js  -->
        <script src="js/checkAuthAdmin.js"></script>

@@ -48,7 +48,7 @@ formAddCategories.addEventListener('submit', async (e) => {
         const status = categoriesInput.dataset.status;
         const time = new Date();
         const created = time.toDateString();
-        const res = await fetch('http://localhost:3000/addCategories', {
+        const res = await fetch('http://127.0.0.1:3000/addCategories', {
             method: "POST",
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ name, status, created })
@@ -103,7 +103,7 @@ categoriesInput.addEventListener('change', (e) => {
 
 const updateNoitemCateGories = async () => {
     try {
-        const res = await fetch('http://localhost:3000/categories');
+        const res = await fetch('http://127.0.0.1:3000/categories');
         const data = await res.json();
         containerNoItemCatgories.classList.toggle('hidden', data.length > 0);
 
@@ -175,7 +175,7 @@ const updateNoitemCateGories = async () => {
                     }).then(async (result) => {
                         if (result.isConfirmed) {
                             try {
-                                const res = await fetch(`http://localhost:3000/deleteCate/${id}`, {
+                                const res = await fetch(`http://127.0.0.1:3000/deleteCate/${id}`, {
                                     method: "delete",
                                     headers: { "Content-type": 'application/json' }
                                 })
@@ -256,7 +256,7 @@ formEditCategories.addEventListener('submit', async e => {
     }
 
     try {
-        const res = await fetch(`http://localhost:3000/editCate/${idItem}`, {
+        const res = await fetch(`http://127.0.0.1:3000/editCate/${idItem}`, {
             method: "PUT",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({ nameEdit, statusEdit, editCreate })

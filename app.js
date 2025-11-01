@@ -2,11 +2,15 @@ const express = require('express');
 const session = require('express-session');
 const mongoDB = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 const port = 3000;
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    credentials: true,
+}));
 
 app.use(session({
     secret: "your_key",
@@ -42,11 +46,101 @@ const producttable = new mongoDB.Schema({
 
 const product = mongoDB.model("product", producttable);
 
+const adminSchema = new mongoDB.Schema({
+    name: {type: String},
+    email: {type: String, unique: true, lowercase: true, trim: true},
+    phone: {type: String, unique: true},
+    password: {type: String, require: true},
+    role: {type: String, require: true},
+})
+
+const adminUser = mongoDB.model("adminUser", adminSchema);
+
 
 const url = 'mongodb+srv://cing16339:1234@db-eccomerce.qts16aa.mongodb.net/?appName=DB-eccomerce';
 
 mongoDB.connect(url)
     .then(() => {
+
+        // check login admin function
+        const checkLoginAdmin = (req, res, next) => {
+            if(!req.session.userAdmninId){
+                return res.status(404).json('Please login admin first!');
+            }
+            next();
+        }
+
+        // auth admin login
+        app.get('/authLoginAdmin', checkLoginAdmin, async (req, res) => {
+            try{
+                const adminId = await req.session.userAdmninId;
+                const adminRole = await req.session.adminRole;
+                const adminName = await req.session.adminName;
+                res.status(200).json({adminId: adminId, adminName, adminName, adminRole: adminRole});
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        app.post('/createAdmin', async (req, res) => {
+            try{
+                const {name, email, phone, password, role} = req.body;
+                const hashPassword = await bcrypt.hash(password, 13);
+                const newAdmin = new adminUser({name: name, email: email, phone: phone, password: hashPassword, role: role});
+                await newAdmin.save();
+                res.status(200).json({data: newAdmin, message: "Added amin user successfully!"});
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        app.post('/loginAdmin', async (req, res) => {
+            try{
+                const {email, password} = req.body;
+                const find = await adminUser.findOne({email: email});
+
+                if(!find){
+                    return res.status(404).json("Invalid email or password!");
+                }
+                const hashPassword = await bcrypt.compare(password, find.password);
+                if(!hashPassword){
+                    return res.status(404).json("Invalid email or password!");
+                }
+
+                req.session.userAdmninId = find._id;
+                req.session.adminRole = find.role;
+                req.session.adminName = find.name;
+
+                console.log(req.session)
+                res.status(200).json("Login successfully!");
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        app.post('/logoutAdmin', async (req, res) => {
+            try{
+                req.session.userAdmninId = false;
+                req.session.adminName = false;
+                req.session.adminRole = false;
+                res.status(200).json('Logout successfully!');
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        app.get('/getAdminuser', async (req, res) => {
+            try{
+                const data = await adminUser.find();
+                if(!data){
+                    return res.status(404).json("Not found!");
+                }
+
+                res.status(200).json(data);
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
 
         app.post('/addCategories', async (req, res) => {
             const { name, status, created } = req.body;
@@ -197,7 +291,7 @@ mongoDB.connect(url)
 
 
         app.listen(port, () => {
-            console.log(`MongoDb connected! http://localhost:${port}`);
+            console.log(`MongoDb connected! http://127.0.0.1:${port}`);
         })
     })
     .catch(err => {

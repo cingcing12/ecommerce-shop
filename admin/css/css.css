@@ -744,6 +744,20 @@ tbody{
     font-weight: bold;
 }
 
+.adminUserNoData.hidden{
+    display: none;
+}
+
+.roleTage{
+    background-color: transparent !important;
+    width: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid green;
+    font-weight: bold;
+    box-shadow: 5px 5px 5px green;
+}
+
 @media(max-width: 991px){
     .sidbar{
         position: absolute;

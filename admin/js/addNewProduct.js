@@ -77,7 +77,7 @@ formAddProduct.addEventListener('submit', async e => {
     }
 
     try {
-        const res = await fetch('http://localhost:3000/addProduct', {
+        const res = await fetch('http://127.0.0.1:3000/addProduct', {
             method: "POST",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({ nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status })
@@ -118,7 +118,7 @@ const updateResetForm = () => {
 
 const updateCategoriesAdd = async (productSelecct) => {
     try {
-        const res = await fetch('http://localhost:3000/categoriesPublish');
+        const res = await fetch('http://127.0.0.1:3000/categoriesPublish');
         const data = await res.json();
         if (data) {
             data.data.forEach(item => {
@@ -196,7 +196,7 @@ const updateSelectCate = (input, form) => {
 
 const updateProduct = async () => {
     try {
-        const res = await fetch('http://localhost:3000/getproduct');
+        const res = await fetch('http://127.0.0.1:3000/getproduct');
         const data = await res.json();
         document.querySelector('.containerNoItemProduct').classList.toggle('hidden', data.length > 0);
         if (data.length > 0) {
@@ -280,7 +280,7 @@ const updateProduct = async () => {
                     }).then(async (result) => {
                         if (result.isConfirmed) {
                             try {
-                                const res = await fetch(`http://localhost:3000/deleteProduct/${id}`, {
+                                const res = await fetch(`http://127.0.0.1:3000/deleteProduct/${id}`, {
                                     method: "delete",
                                     headers: { "Content-type": "application/json" }
                                 })
@@ -480,7 +480,7 @@ formEditProduct.addEventListener('submit', async e => {
     }
 
     try {
-        const res = await fetch(`http://localhost:3000/updateProduct/${idEdit}`, {
+        const res = await fetch(`http://127.0.0.1:3000/updateProduct/${idEdit}`, {
             method: "put",
             headers: { "Content-type": "application/json" },
             body: JSON.stringify({ nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status })

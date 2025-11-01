@@ -51,6 +51,6 @@ const updateCatedas = async (card, fec) => {
     updateFecthingData(fec, countCard, percentOfCard);
 }
 
-updateCatedas(cardDasboardCate, "http://localhost:3000/categoriesPublish");
-updateCatedas(product, "http://localhost:3000/productPublish");
+updateCatedas(cardDasboardCate, "http://127.0.0.1:3000/categoriesPublish");
+updateCatedas(product, "http://127.0.0.1:3000/productPublish");
 
