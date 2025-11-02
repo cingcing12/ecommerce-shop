@@ -247,7 +247,7 @@ body[data-bs-theme="dark"] .contentMenu{
 }
 
 .cardDasboard{
-    background-color: #EBF7F7;
+    /* background-color: #EBF7F7; */
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -255,6 +255,10 @@ body[data-bs-theme="dark"] .contentMenu{
     align-items: center;
     width: 100%;
     transition: .5s ease;
+}
+
+body[data-bs-theme="dark"] .cardDasboard{
+    box-shadow: 0px 0px 10px white;
 }
 
 .countCard{
@@ -757,6 +761,67 @@ tbody{
     font-weight: bold;
     box-shadow: 5px 5px 5px green;
 }
+
+.adminNotFound td{
+    font-weight: bold;
+    font-size: 15px;
+    padding: 40px;
+    text-align: center;
+}
+
+.adminNotFound{
+    opacity: 0;
+    position: absolute;
+    visibility: hidden;
+}
+
+.adminNotFound.active{
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+}
+
+.profileContainer{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    background-color: #EBF7F7;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s ease;
+    z-index: 102;
+}
+
+.profileContainer.active{
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.containerCover{
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(50deg, rgb(161, 6, 6), rgb(14, 81, 180));
+    border-radius: 14px;
+}
+
+.containerImageProfile{
+    margin-top: -50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.containerImageProfile img{
+    width: 100px;
+}
+
 
 @media(max-width: 991px){
     .sidbar{

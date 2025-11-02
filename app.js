@@ -76,7 +76,8 @@ mongoDB.connect(url)
                 const adminId = await req.session.userAdmninId;
                 const adminRole = await req.session.adminRole;
                 const adminName = await req.session.adminName;
-                res.status(200).json({adminId: adminId, adminName, adminName, adminRole: adminRole});
+                const adminEmail = await req.session.adminEmail;
+                res.status(200).json({adminId: adminId, adminName, adminName, adminRole: adminRole, adminEmail: adminEmail});
             }catch(err){
                 res.status(500).json({err: err.message});
             }
@@ -110,6 +111,7 @@ mongoDB.connect(url)
                 req.session.userAdmninId = find._id;
                 req.session.adminRole = find.role;
                 req.session.adminName = find.name;
+                req.session.adminEmail = find.email;
 
                 console.log(req.session)
                 res.status(200).json("Login successfully!");
@@ -123,6 +125,7 @@ mongoDB.connect(url)
                 req.session.userAdmninId = false;
                 req.session.adminName = false;
                 req.session.adminRole = false;
+                req.session.adminEmail = false;
                 res.status(200).json('Logout successfully!');
             }catch(err){
                 res.status(500).json({err: err.message});

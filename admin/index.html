@@ -116,7 +116,7 @@
             </div>
 
             <div class="contentMenu">
-              <button class="menuItem btn btn-primary"><i class="bi bi-person-fill"></i> Profile</button>
+              <button class="menuItem btn btn-primary btnProfile"><i class="bi bi-person-fill"></i> Profile</button>
               <div class="containerdarkMOde">
                 <div class="form-check form-switch">
   <input class="form-check-input darkBtn" data-darkmode="dark" type="checkbox" role="switch" id="switchCheckDefault">
@@ -125,6 +125,44 @@
               </div>
               <button class="menuItem btn btn-danger" id="logout"><i class="bi bi-box-arrow-right"></i> Logout</button>
             </div>
+            </div>
+
+            <div class="profileContainer bg-dark" data-id="" data-bs-theme="dark">
+              <div class="containerImage">
+                <div class="containerCover"></div>
+                <div class="containerImageProfile">
+                  <img src="img/Default_pfp.svg.png" alt="">
+                  <h4 class="nameProfile text-white mt-3">VongSokpheak</h4>
+                  <p class="emailProfile text-secondary">vongsokpheak@gmail.com</p>
+                </div>
+              </div>
+
+              <div class="containerInformation">
+                <h4 class="fw-bold fs-4 text-white mb-3">Information</h4>
+                <div class="row">
+                  <div class="col-12 mb-3">
+                    <div class="form-floating">
+      <input type="text" id="nameInput" class="form-control" placeholder="Name" readonly>
+      <label for="nameInput">Name</label>
+    </div>
+    </div>
+    <div class="col-12 mb-3">
+      <div class="form-floating">
+      <input type="text" id="emailInput" class="form-control" placeholder="Email" readonly>
+      <label for="emailInput">Email</label>
+    </div>
+    </div>
+
+    <div class="col-12 mb-3">
+      <div class="form-floating">
+      <input type="text" id="roleInput" class="form-control" placeholder="Role" readonly>
+      <label for="roleInput">Role</label>
+    </div>
+    </div>
+                </div>
+              </div>
+
+              <button class="btnConcelEditCate btnConcelProfile"><i class="bi bi-x-lg"></i></button>
             </div>
 
             <div class="btnSidebarSmall">
@@ -143,7 +181,7 @@
       <!-- cart dasboard start -->
        <div class="containercardDasboard">
 
-        <div class="cardDasboard categories">
+        <div class="cardDasboard categories bg-dark text-white" data-bs-theme="dark">
           <div class="leftCard">
             <div class="countCard fs-1">0</div>
             <h6>Categories</h6>
@@ -154,7 +192,7 @@
           </div>
           
 
-          <div class="cardDasboard">
+          <div class="cardDasboard bg-dark text-white">
           <div class="leftCard">
             <div class="countCard fs-1">0</div>
             <h6>Customer</h6>
@@ -165,7 +203,7 @@
           </div>
           
 
-          <div class="cardDasboard product">
+          <div class="cardDasboard product bg-dark text-white">
           <div class="leftCard">
             <div class="countCard fs-1">0</div>
             <h6>Products</h6>
@@ -175,7 +213,7 @@
           </div>
           </div>
 
-          <div class="cardDasboard">
+          <div class="cardDasboard bg-dark text-white">
           <div class="leftCard">
             <div class="countCard fs-1">0</div>
             <h6>Order</h6>
@@ -186,7 +224,7 @@
           </div>
           
 
-          <div class="cardDasboard">
+          <div class="cardDasboard bg-dark text-white">
           <div class="leftCard">
             <div class="countCard fs-1">$0.00</div>
             <h6>Revenues</h6>
@@ -205,6 +243,10 @@
       <!-- container right end -->
     </div>
     <!-- container dasboard end  -->
+
+    <!-- overlay add cate start  -->
+       <div class="overlayAddCate"></div>
+      <!-- overlay add cate end  -->
 
     <!-- menu js start  -->
     <script src="js/menu.js"></script>
