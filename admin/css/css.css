@@ -19,7 +19,7 @@ body{
 .sidbar{
     position: sticky;
     top: 0;
-    background-color: #EBF7F7;
+    /* background-color: #EBF7F7; */
     padding: 20px;
     width: 20%;
     overflow: hidden;
@@ -29,7 +29,7 @@ body{
 }
 
 body[data-bs-theme="dark"] .sidbar{
-    background-color: #1e302d;
+    box-shadow: 0px 0px 10px white;
 }
 
 .containerLogo{
@@ -62,20 +62,20 @@ body[data-bs-theme="dark"] .sidbar{
 }
 
 .navbar-nav .nav-item:hover{
-    background-color: #D4EBE7;
+    background-color: #0acaaa;
 }
 
 body[data-bs-theme="dark"] .navbar-nav .nav-item:hover{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 body[data-bs-theme="dark"] .nav-item.active{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 
 .navbar-nav .nav-item.active{
-    background-color: #D4EBE7;
+    background-color: #0acaaa;
 }
 
 .containerDasboard.activeBigDevive .sidbar{
@@ -125,7 +125,7 @@ body[data-bs-theme="dark"] .nav-item.active{
 }
 
 body[data-bs-theme="dark"] .btnSidebar{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerDasboard.activeBigDevive .btnSidebar{
@@ -133,7 +133,7 @@ body[data-bs-theme="dark"] .btnSidebar{
 }
 
 body[data-bs-theme="dark"] .menu{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerDasboard.activeBigDevive .containerSidebarBtn{
@@ -185,7 +185,7 @@ body[data-bs-theme="dark"] .menu{
     align-items: center;
     border-radius: 50%;
     cursor: pointer;
-    background-color: #EBF7F7;
+    background-color: #0acaaa;
     transition: .5s ease;
 }
 
@@ -199,7 +199,7 @@ body[data-bs-theme="dark"] .menu{
 }
 
 body[data-bs-theme="dark"] .smallBtn{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerMenu{
@@ -210,19 +210,36 @@ body[data-bs-theme="dark"] .smallBtn{
     position: absolute;
     right: 0;
     background-color: #D4EBE7;
-    padding: 20px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
     opacity: 0;
     visibility: hidden;
     transition: .2s ease-in-out;
+    z-index: 12;
+    overflow: hidden;
+}
+
+.contentMenu button{
+    background-color: transparent !important;
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+.contentMenu button:nth-child(1), .containerdarkMOde{
+    border-bottom: 1px solid gray !important;
+    border-radius: 5px;
+}
+
+.contentMenu .containerdarkMOde{
+    padding: 5px;
 }
 
 body[data-bs-theme="dark"] .contentMenu{
-    background-color: #011613;
+    box-shadow: 0px 0px 10px white;
 }
+
 
 .contentMenu button{
     text-wrap: nowrap;
@@ -337,7 +354,7 @@ body[data-bs-theme="dark"] .cardDasboard{
 }
 
 body[data-bs-theme="dark"] .btnStatus.active{
-    color: #217e70;
+    color: #0acaaa  ;
 }
 
 .activeBar{
@@ -351,7 +368,7 @@ body[data-bs-theme="dark"] .btnStatus.active{
 }
 
 body[data-bs-theme="dark"] .activeBar{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerActiveStatus::after{
@@ -381,7 +398,7 @@ body[data-bs-theme="dark"] .activeBar{
 }
 
 body[data-bs-theme="dark"] .addnewOrder{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerTable{
@@ -440,7 +457,7 @@ body[data-bs-theme="dark"] .addnewOrder{
 }
 
 body[data-bs-theme="dark"] .btnAddNewCate{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 .containerSearchCategories, .containerSearchCs{
     max-width: 500px;
@@ -490,7 +507,7 @@ body[data-bs-theme="dark"] .btnAddNewCate{
 }
 
 body[data-bs-theme="dark"] .btnAddNewCs{
-    background-color: #011613;
+    background-color: #0acaaa;
 }
 
 .containerSearchCs input{
@@ -821,6 +838,7 @@ tbody{
 .containerImageProfile img{
     width: 100px;
 }
+
 
 
 @media(max-width: 991px){

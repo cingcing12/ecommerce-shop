@@ -6,6 +6,8 @@ const roleInput = document.getElementById('roleInput');
 const profileContainer = document.querySelector('.profileContainer');
 const btnProfile = document.querySelector('.btnProfile');
 const btnConcelProfile = document.querySelector('.btnConcelProfile');
+const navItem = document.querySelectorAll('.nav-item');
+const orderLinkNone = document.querySelectorAll('.orderLinkNone');
 
 
 const checkAuth = async () => {
@@ -27,7 +29,22 @@ const checkAuth = async () => {
         emailInput.value = message.adminEmail;
         roleInput.value = message.adminRole;
 
-        console.log(message)
+        if(message.adminRole == "Admin"){
+            document.querySelector('.nav-item.adminUserLink').remove();
+            if(window.location.pathname == "/admin/adminUser.html"){
+                window.location.href = "404.html"
+            }
+        }else if(message.adminRole == "Admin For Delivery" && window.location.pathname == "/admin/index.html"){
+            window.location.href = "order.html";
+        }else if(message.adminRole == "Admin For Delivery"){
+            document.querySelector('.nav-item.adminUserLink').remove();
+            orderLinkNone.forEach(item => item.remove());
+            if(window.location.pathname == "/admin/adminUser.html" || window.location.pathname == "/admin/index.html" || window.location.pathname == "/admin/categories.html"
+                || window.location.pathname == "/admin/customer.html" || window.location.pathname == "/admin/product.html"
+            ){
+                window.location.href = "404.html"
+            }
+        }
 
         
     }catch(err){

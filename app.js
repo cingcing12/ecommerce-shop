@@ -95,6 +95,18 @@ mongoDB.connect(url)
             }
         })
 
+        app.put('/editAdmin/:idEdit', async (req, res) => {
+            try{
+                const {idEdit} = req.params;
+                const {name, email, phone, role} = req.body;
+                const editAdmin = await adminUser.findByIdAndUpdate(idEdit, {name: name, email: email, phone: phone, role: role}, {new: true});
+                res.status(200).json({data: editAdmin, message: "Update amin user successfully!"});
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+
         app.post('/loginAdmin', async (req, res) => {
             try{
                 const {email, password} = req.body;
@@ -127,6 +139,20 @@ mongoDB.connect(url)
                 req.session.adminRole = false;
                 req.session.adminEmail = false;
                 res.status(200).json('Logout successfully!');
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        app.delete('/deleteAdmin/:id', async (req, res) => {
+            try{
+                const {id} = req.params;
+                const delAmdin = await adminUser.findByIdAndDelete(id);
+
+                if(!delAmdin){
+                    return res.status(404).json("Not found!");
+                }
+                res.status(200).json('Deleted successfully!');
             }catch(err){
                 res.status(500).json({err: err.message});
             }
