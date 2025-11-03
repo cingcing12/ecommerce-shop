@@ -186,16 +186,17 @@ formAddAdmin.addEventListener('submit', async (e) => {
         const role = document.getElementById('roleSelect').value;
         const phone = document.getElementById('phone').value;
         const password = document.getElementById('password').value;
+        let img = "null";
 
         const res = await fetch('http://127.0.0.1:3000/createAdmin', {
             method: "POST",
             headers: { "Content-type": "application/json" },
-            body: JSON.stringify({ name, email, phone, password, role })
+            body: JSON.stringify({ name, email, phone, password, role, img})
         });
 
         const message = await res.json();
         if (res.ok) {
-            addAdminConcel.click();
+            overlayAddCate.click();
             Swal.fire({
                 title: "Added!",
                 text: message.message,

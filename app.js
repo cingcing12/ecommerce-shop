@@ -1,8 +1,11 @@
+const fs = require('fs');
 const express = require('express');
 const session = require('express-session');
 const mongoDB = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
 const bcrypt = require('bcrypt');
+const path = require('path');
 const port = 3000;
 
 const app = express();
@@ -22,6 +25,16 @@ app.use(session({
         maxAge: false
     }
 }))
+
+// 📸 Multer setup — store files in ./img/
+const storage = multer.diskStorage({
+  destination: './img/',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage });
+
 
 const CateGories = new mongoDB.Schema({
     categoriesName: String,
@@ -44,14 +57,16 @@ const producttable = new mongoDB.Schema({
     status: String
 })
 
+
 const product = mongoDB.model("product", producttable);
 
 const adminSchema = new mongoDB.Schema({
-    name: {type: String},
-    email: {type: String, unique: true, lowercase: true, trim: true},
-    phone: {type: String, unique: true},
-    password: {type: String, require: true},
-    role: {type: String, require: true},
+    name: { type: String },
+    email: { type: String, unique: true, lowercase: true, trim: true },
+    phone: { type: String, unique: true },
+    password: { type: String, require: true },
+    role: { type: String, require: true },
+    img: { type: String, require: false }
 })
 
 const adminUser = mongoDB.model("adminUser", adminSchema);
@@ -64,7 +79,7 @@ mongoDB.connect(url)
 
         // check login admin function
         const checkLoginAdmin = (req, res, next) => {
-            if(!req.session.userAdmninId){
+            if (!req.session.userAdmninId) {
                 return res.status(404).json('Please login admin first!');
             }
             next();
@@ -72,51 +87,82 @@ mongoDB.connect(url)
 
         // auth admin login
         app.get('/authLoginAdmin', checkLoginAdmin, async (req, res) => {
-            try{
+            try {
                 const adminId = await req.session.userAdmninId;
                 const adminRole = await req.session.adminRole;
                 const adminName = await req.session.adminName;
                 const adminEmail = await req.session.adminEmail;
-                res.status(200).json({adminId: adminId, adminName, adminName, adminRole: adminRole, adminEmail: adminEmail});
-            }catch(err){
-                res.status(500).json({err: err.message});
+                const adminImg = await req.session.adminImg;
+                res.status(200).json({ adminId: adminId, adminName, adminName, adminRole: adminRole, adminEmail: adminEmail, adminImg: adminImg });
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.post('/createAdmin', async (req, res) => {
-            try{
-                const {name, email, phone, password, role} = req.body;
+            try {
+                const { name, email, phone, password, role, img } = req.body;
                 const hashPassword = await bcrypt.hash(password, 13);
-                const newAdmin = new adminUser({name: name, email: email, phone: phone, password: hashPassword, role: role});
+                const newAdmin = new adminUser({ name: name, email: email, phone: phone, password: hashPassword, role: role, img: img });
                 await newAdmin.save();
-                res.status(200).json({data: newAdmin, message: "Added amin user successfully!"});
-            }catch(err){
-                res.status(500).json({err: err.message});
+                res.status(200).json({ data: newAdmin, message: "Added amin user successfully!" });
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.put('/editAdmin/:idEdit', async (req, res) => {
-            try{
-                const {idEdit} = req.params;
-                const {name, email, phone, role} = req.body;
-                const editAdmin = await adminUser.findByIdAndUpdate(idEdit, {name: name, email: email, phone: phone, role: role}, {new: true});
-                res.status(200).json({data: editAdmin, message: "Update amin user successfully!"});
-            }catch(err){
-                res.status(500).json({err: err.message});
+            try {
+                const { idEdit } = req.params;
+                const { name, email, phone, role } = req.body;
+                const editAdmin = await adminUser.findByIdAndUpdate(idEdit, { name: name, email: email, phone: phone, role: role }, { new: true });
+                res.status(200).json({ data: editAdmin, message: "Update amin user successfully!" });
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
+        app.post('/uploadProfile', upload.single('image'), async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!req.file) return res.status(400).send('No file uploaded');
+
+    // 🔍 Find the admin user
+    const admin = await adminUser.findById(id);
+    if (!admin) return res.status(404).send('Admin not found');
+
+    // 🧹 Delete old image if exists
+    if (admin.img) {
+      const oldPath = path.join(__dirname, 'img', admin.img);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+    }
+
+    // 🆕 Save new image name in database
+    admin.img = req.file.filename;
+    await admin.save();
+
+    // 💾 Update session
+    req.session.adminImg = req.file.filename;
+
+    res.send('✅ Profile image updated successfully!');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('❌ Error uploading image.');
+  }
+});
 
         app.post('/loginAdmin', async (req, res) => {
-            try{
-                const {email, password} = req.body;
-                const find = await adminUser.findOne({email: email});
+            try {
+                const { email, password } = req.body;
+                const find = await adminUser.findOne({ email: email });
 
-                if(!find){
+                if (!find) {
                     return res.status(404).json("Invalid email or password!");
                 }
                 const hashPassword = await bcrypt.compare(password, find.password);
-                if(!hashPassword){
+                if (!hashPassword) {
                     return res.status(404).json("Invalid email or password!");
                 }
 
@@ -124,50 +170,51 @@ mongoDB.connect(url)
                 req.session.adminRole = find.role;
                 req.session.adminName = find.name;
                 req.session.adminEmail = find.email;
+                req.session.adminImg = find.img;
 
-                console.log(req.session)
                 res.status(200).json("Login successfully!");
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.post('/logoutAdmin', async (req, res) => {
-            try{
+            try {
                 req.session.userAdmninId = false;
                 req.session.adminName = false;
                 req.session.adminRole = false;
                 req.session.adminEmail = false;
+                req.session.adminImg = false;
                 res.status(200).json('Logout successfully!');
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.delete('/deleteAdmin/:id', async (req, res) => {
-            try{
-                const {id} = req.params;
+            try {
+                const { id } = req.params;
                 const delAmdin = await adminUser.findByIdAndDelete(id);
 
-                if(!delAmdin){
+                if (!delAmdin) {
                     return res.status(404).json("Not found!");
                 }
                 res.status(200).json('Deleted successfully!');
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
         app.get('/getAdminuser', async (req, res) => {
-            try{
+            try {
                 const data = await adminUser.find();
-                if(!data){
+                if (!data) {
                     return res.status(404).json("Not found!");
                 }
 
                 res.status(200).json(data);
-            }catch(err){
-                res.status(500).json({err: err.message});
+            } catch (err) {
+                res.status(500).json({ err: err.message });
             }
         })
 
@@ -291,7 +338,7 @@ mongoDB.connect(url)
                 const newData = cateData.map(item => {
                     const filter = productData.filter(dataFind => dataFind.categories.toLowerCase().includes(item.categoriesName.toLowerCase()));
 
-                    return{
+                    return {
                         categoriesName: item.categoriesName,
                         products: filter
                     }
@@ -304,16 +351,16 @@ mongoDB.connect(url)
         })
 
         app.put('/updateProduct/:idEdit', async (req, res) => {
-            try{
-                const {idEdit} = req.params;
+            try {
+                const { idEdit } = req.params;
                 const { nameProduct, imgURL, productSelect, size, brand, stock, price, created, des, status } = req.body;
-                const dataUPdate = await product.findByIdAndUpdate(idEdit, 
+                const dataUPdate = await product.findByIdAndUpdate(idEdit,
                     { nameProduct: nameProduct, imgURL: imgURL, categories: productSelect, size: size, brand: brand, stock: stock, price: price, created: created, des: des, status: status },
-                    {new: true}
+                    { new: true }
                 );
 
                 res.status(200).json({ data: dataUPdate, message: "Product updated successfully!" });
-            }catch(err){
+            } catch (err) {
                 res.status(500).json({ err: err.message });
             }
         })

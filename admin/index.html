@@ -107,7 +107,7 @@
         <div class="containerProfile">
           <div class="profile">
             <div class="imgProfile">
-              <img src="img/Default_pfp.svg.png" alt="default">
+              <img src="" alt="default" id="imgProfile">
             </div>
 
             <div class="containerMenu">
@@ -131,7 +131,11 @@
               <div class="containerImage">
                 <div class="containerCover"></div>
                 <div class="containerImageProfile">
-                  <img src="img/Default_pfp.svg.png" alt="">
+                  <div class="containerImg position-relative">
+                    <img src="" alt="" id="imgProfile">
+                  <div class="contianerBtnUploadImg text-white"><i class="bi bi-camera-fill"></i></div>
+                  <form id="addimgProfile"><input type="file" id="uplaodImgProfile" aria-hidden="true" accept="image/*" style="display: none;"></form>
+                  </div>
                   <h4 class="nameProfile text-white mt-3">VongSokpheak</h4>
                   <p class="emailProfile text-secondary">vongsokpheak@gmail.com</p>
                 </div>
@@ -262,5 +266,8 @@
 
        <!-- logout js  -->
         <script src="js/logout.js"></script>
+
+        <!-- add img profile js  -->
+         <script src="js/addimgProfile.js"></script>
   </body>
 </html>

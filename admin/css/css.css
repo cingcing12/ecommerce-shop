@@ -169,6 +169,8 @@ body[data-bs-theme="dark"] .menu{
 
 .profile img{
     width: 38px;
+    height: 38px;
+    border-radius: 50%;
 }
 
 .profile{
@@ -837,9 +839,17 @@ tbody{
 
 .containerImageProfile img{
     width: 100px;
+    height: 100px;
+    border-radius: 50%;
 }
 
-
+.contianerBtnUploadImg{
+    position: absolute;
+    cursor: pointer;
+    right: -10px;
+    bottom: -10px;
+    font-size: 20px;
+}
 
 @media(max-width: 991px){
     .sidbar{

@@ -8,6 +8,7 @@ const btnProfile = document.querySelector('.btnProfile');
 const btnConcelProfile = document.querySelector('.btnConcelProfile');
 const navItem = document.querySelectorAll('.nav-item');
 const orderLinkNone = document.querySelectorAll('.orderLinkNone');
+const imgProfile = document.querySelectorAll('#imgProfile');
 
 
 const checkAuth = async () => {
@@ -28,6 +29,12 @@ const checkAuth = async () => {
         nameInput.value = message.adminName;
         emailInput.value = message.adminEmail;
         roleInput.value = message.adminRole;
+
+        imgProfile.forEach(item => {
+            item.src = !message.adminImg || message.adminImg === "null"
+  ? "img/Default_pfp.svg.png"
+  : `../img/${message.adminImg}`;
+        })
 
         if(message.adminRole == "Admin"){
             document.querySelector('.nav-item.adminUserLink').remove();
