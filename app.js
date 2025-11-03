@@ -7,6 +7,7 @@ const multer = require('multer');
 const bcrypt = require('bcrypt');
 const path = require('path');
 const port = 3000;
+const crypto = require('crypto');
 
 const app = express();
 app.use(express.json());
@@ -26,13 +27,8 @@ app.use(session({
     }
 }))
 
-// 📸 Multer setup — store files in ./img/
-const storage = multer.diskStorage({
-  destination: './img/',
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
+// Use memory storage to prevent writing file before check
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
@@ -123,35 +119,57 @@ mongoDB.connect(url)
         })
 
         app.post('/uploadProfile', upload.single('image'), async (req, res) => {
-  try {
-    const { id } = req.body;
-    if (!req.file) return res.status(400).send('No file uploaded');
+            try {
+                if (!req.file) return res.status(400).send('No file uploaded');
 
-    // 🔍 Find the admin user
-    const admin = await adminUser.findById(id);
-    if (!admin) return res.status(404).send('Admin not found');
+                const { id } = req.body;
 
-    // 🧹 Delete old image if exists
-    if (admin.img) {
-      const oldPath = path.join(__dirname, 'img', admin.img);
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
-      }
-    }
+                // Find admin
+                const admin = await adminUser.findById(id);
+                if (!admin) return res.status(404).send('Admin not found');
 
-    // 🆕 Save new image name in database
-    admin.img = req.file.filename;
-    await admin.save();
+                // Compute SHA256 hash of the uploaded file
+                const hash = crypto.createHash('sha256').update(req.file.buffer).digest('hex');
 
-    // 💾 Update session
-    req.session.adminImg = req.file.filename;
+                // Check existing files in img folder for same hash
+                const imgFolder = path.join(__dirname, 'img');
+                const files = fs.readdirSync(imgFolder);
+                let existingFile = null;
 
-    res.send('✅ Profile image updated successfully!');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('❌ Error uploading image.');
-  }
-});
+                for (let f of files) {
+                    const existingBuffer = fs.readFileSync(path.join(imgFolder, f));
+                    const existingHash = crypto.createHash('sha256').update(existingBuffer).digest('hex');
+                    if (hash === existingHash) {
+                        existingFile = f; // duplicate found
+                        break;
+                    }
+                }
+
+                if (existingFile) { 
+                    // Duplicate exists → just update session
+                    req.session.adminImg = existingFile;
+                    admin.img = existingFile;
+                    await admin.save();
+                    return res.send('✅ Profile image updated!.');
+                }
+
+                // Save new image
+                const filename = Date.now() + path.extname(req.file.originalname);
+                const filePath = path.join(imgFolder, filename);
+                fs.writeFileSync(filePath, req.file.buffer);
+
+                // Update DB and session
+                admin.img = filename;
+                await admin.save();
+                req.session.adminImg = filename;
+
+                res.send('✅ Profile image uploaded successfully!');
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('❌ Error uploading image.');
+            }
+        });
+
 
         app.post('/loginAdmin', async (req, res) => {
             try {
