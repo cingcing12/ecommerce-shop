@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce - Shop - Categories</title>
+
+    <!-- link bs  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- icon bs  -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    />
+
+    <!-- sweet alert 2  -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- link css  -->
+     <link rel="stylesheet" href="../css/css.css">
+</head>
+<body>
+
+    <!-- navbar start -->
+     <navbar class="navbarContainer">
+        <div class="container">
+            <div class="containerLogo">
+            <a href="../index.html">
+                <img src="../img/clothing-t-shirt-online-shop-logo-idea_667511-714.avif" alt="">
+
+                <h6 class="titleLogo">
+                    Clothing Online <span>Shop</span>
+                </h6>
+            </a>
+        </div>
+
+        <div class="contianerRightNav">
+
+            <div class="containerSearch">
+                <input type="search" placeholder="Search..." class="form-control" id="searchProduct">
+            </div>
+
+            <div class="containerCart menu">
+                <div class="contentRight">
+                <a href="" class="wishlistContainer containerIconNav nav-link">Wishlist
+                    <i class="bi bi-heart"></i>
+                </a>
+            </div>
+            <div class="contentRight">
+                <a href="" class="cartContainer containerIconNav nav-link">Cart
+                    <i class="bi bi-cart2"></i>
+                </a>
+            </div>
+            <div class="contentRight">
+                <a href="" class="userContainer containerIconNav nav-link">Login
+                    <i class="bi bi-person"></i>
+                </a>
+            </div>
+            </div>
+
+            <div class="searchIcon d-lg-none d-inline-flex"><i class="bi bi-search"></i></div>
+            <div class="menuBtn d-lg-none d-inline-flex"><i class="bi bi-list"></i></div>
+        </div>
+        </div>
+     </navbar>
+    <!-- navbar end -->
+
+    <!-- shop by categories stasrt -->
+     <div class="containerShopCategories">
+        <div class="container"></div>
+     </div>
+    <!-- shop by categories end --> 
+
+       <!-- overlay start  -->
+     <div class="overlay"></div>
+
+
+    <div class="containerProduct">
+        <div class="container"></div>
+    </div>
+    
+
+    <!-- index js start  -->
+     <script src="../js/index.js"></script>
+
+     <!-- menu js  -->
+      <script src="../js/menu.js"></script>
+
+     <script type="module">
+        import updateDataProduct from "../js/updateDataProduct.js";
+
+        const containerProduct = document.querySelector('.containerProduct .container')
+
+        const updateCategotiesProduct = async () => {
+            const searchParams = new URLSearchParams(window.location.search);
+            const queryCategories = searchParams.get('queryCategories');
+            if(!queryCategories){
+                return window.location.href = "404.html";
+            }
+
+            const res = await fetch(`http://127.0.0.1:3000/getCategoriesProducts?queryCategories=${queryCategories}`);
+            const data = await res.json();
+            if(res.ok){
+                if(data.length > 0){
+                    updateDataProduct(data, containerProduct);
+                }
+            }
+        }
+
+        updateCategotiesProduct();
+     </script>
+</body>
+</html>

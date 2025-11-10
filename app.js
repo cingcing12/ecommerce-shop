@@ -68,6 +68,43 @@ const adminSchema = new mongoDB.Schema({
 const adminUser = mongoDB.model("adminUser", adminSchema);
 
 
+const userSchema = new mongoDB.Schema({
+    name: { type: String },
+    email: { type: String, unique: true, lowercase: true, trim: true },
+    password: { type: String, require: true },
+    phone: { type: String, unique: true },
+    adress: { type: String, require: true },
+    city: { type: String, require: true },
+    img: { type: String, require: false }
+})
+
+const user = mongoDB.model("user", userSchema);
+
+const cartSchema = new mongoDB.Schema({
+  userId: {
+    type: mongoDB.Schema.Types.ObjectId, 
+    ref: "user", 
+    required: true
+  },
+  idProduct: {
+    type: mongoDB.Schema.Types.ObjectId, 
+    ref: "product", 
+    required: true
+  },
+  quantity: {
+    type: Number,
+    default: 1
+  },
+  addedAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const cart = mongoDB.model("cart", cartSchema);
+
+
+
 const url = 'mongodb+srv://cing16339:1234@db-eccomerce.qts16aa.mongodb.net/?appName=DB-eccomerce';
 
 mongoDB.connect(url)
@@ -382,6 +419,77 @@ mongoDB.connect(url)
                 res.status(500).json({ err: err.message });
             }
         })
+
+        app.get('/getCategoriesProducts', async (req, res) => {
+            try{
+                const {queryCategories} = req.query;
+                if(queryCategories == "allCategories"){
+                    const data = await product.find();
+                    res.status(200).json(data);
+                }else{
+                    const data = await product.find({categories: queryCategories});
+
+                    if(!data){
+                        return res.status(404).json("Not found!");
+                    }
+                    res.status(200).json(data);
+                }
+            }catch(err){
+                res.status(500).json({err: err.message});
+            }
+        })
+
+        const checkUserLogin = async (req, res, next) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({ err: "Login first!" });
+    }
+
+    // Find user by ID stored in session
+    const user = await user.findById(req.session.userId);
+
+    if (!user) {
+      return res.status(401).json({ err: "User not found!" });
+    }
+
+    // ✅ Attach user document to request
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ err: "Server error in checkUserLogin" });
+  }
+};
+
+        app.post('/addCart', checkUserLogin, async (req, res) => {
+  try {
+    const { id, quantity } = req.body; // id = productId
+    const userId = req.user._id; // assuming checkUserLogin attaches user info to req.user
+
+    // Check if the product already exists in user's cart
+    const existingItem = await cart.findOne({ idProduct: id, userId });
+
+    if (!existingItem) {
+      // Create new cart item
+      const newItem = new cart({
+        userId,
+        idProduct: id,
+        quantity: quantity,
+      });
+      await newItem.save();
+      res.status(200).json({ data: newItem, message: "Added to cart successfully!" });
+    } else {
+      // Update existing cart item (increment quantity)
+      existingItem.quantity += Number(quantity);
+      await existingItem.save();
+      res.status(200).json({ data: existingItem, message: "Updated quantity successfully!" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error while adding to cart" });
+  }
+});
+
 
 
         app.listen(port, () => {
